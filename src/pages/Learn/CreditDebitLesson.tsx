@@ -32,21 +32,21 @@ const whyGetCreditCardLesson = {
       ]
     },
     {
-      question: "What is a benefit of having good credit history?",
+      question: "Which of the following is true?",
       options: [
-        { text: "Higher interest rates", isCorrect: false },
-        { text: "Better loan terms and lower rates", isCorrect: true },
-        { text: "More credit card debt", isCorrect: false },
-        { text: "Fewer financial options", isCorrect: false }
+        { text: "Using credit cards ruins your score", isCorrect: false },
+        { text: "You can only build credit by borrowing money", isCorrect: false },
+        { text: "Credit history improves by paying off the full balance on time", isCorrect: true },
+        { text: "Credit cards are for emergencies only", isCorrect: false }
       ]
     },
     {
-      question: "Why is it helpful to develop credit habits early?",
+      question: "What happens when you don't pay your credit card on time?",
       options: [
-        { text: "To maximize debt potential", isCorrect: false },
-        { text: "To impress friends with purchases", isCorrect: false },
-        { text: "To learn responsible credit management", isCorrect: true },
-        { text: "To qualify for unlimited credit", isCorrect: false }
+        { text: "You get rewards", isCorrect: false },
+        { text: "Your credit score increases", isCorrect: false },
+        { text: "You avoid interest", isCorrect: false },
+        { text: "You may pay interest and hurt your credit score", isCorrect: true }
       ]
     }
   ]
@@ -60,40 +60,40 @@ const whenToUseLesson = {
       <p>Credit cards provide benefits when used in specific situations:</p>
       
       <ul className="list-disc pl-5 space-y-2">
-        <li><strong>Online Purchases</strong> - Better fraud protection than debit cards</li>
-        <li><strong>Travel Expenses</strong> - Insurance benefits, rewards, and no foreign transaction fees (with some cards)</li>
-        <li><strong>Large Purchases</strong> - When you need extended warranty protection</li>
-        <li><strong>Subscription Services</strong> - For consistent monthly charges you can budget for</li>
-        <li><strong>Emergency Expenses</strong> - When you have no other options (but have a repayment plan)</li>
+        <li><strong>When You Can Pay in Full</strong> - Only use credit when you can pay the full balance by due date</li>
+        <li><strong>For Fraud Protection</strong> - Credit cards offer better protection than debit for online purchases</li>
+        <li><strong>To Earn Rewards</strong> - Get cashback, points, or miles on everyday purchases</li>
+        <li><strong>For Recurring Subscriptions</strong> - Set it and forget it for regular bills you've budgeted for</li>
+        <li><strong>To Build Credit Responsibly</strong> - Regular small purchases paid off monthly improve your score</li>
       </ul>
     </div>
   ),
   quiz: [
     {
-      question: "When is using a credit card better than a debit card for online shopping?",
+      question: "Which is a good reason to use a credit card?",
       options: [
-        { text: "It allows you to spend more than you have", isCorrect: false },
-        { text: "It provides better fraud protection", isCorrect: true },
-        { text: "It always offers free shipping", isCorrect: false },
-        { text: "It prevents you from making impulsive purchases", isCorrect: false }
+        { text: "You can't afford something", isCorrect: false },
+        { text: "You want cashback or fraud protection", isCorrect: true },
+        { text: "You want to avoid budgeting", isCorrect: false },
+        { text: "You don't have a debit card", isCorrect: false }
       ]
     },
     {
-      question: "What benefit might a credit card provide for large purchases?",
+      question: "Which of these should go on a credit card?",
       options: [
-        { text: "It lets you buy things you can't afford", isCorrect: false },
-        { text: "It automatically negotiates a lower price", isCorrect: false },
-        { text: "It may provide extended warranty protection", isCorrect: true },
-        { text: "It increases the value of your purchase", isCorrect: false }
+        { text: "Late rent you can't cover", isCorrect: false },
+        { text: "Designer shoes you can't afford", isCorrect: false },
+        { text: "Monthly Netflix subscription you budgeted for", isCorrect: true },
+        { text: "Cash withdrawal at ATM", isCorrect: false }
       ]
     },
     {
-      question: "When should you use a credit card for emergency expenses?",
+      question: "What's the best way to ensure you don't forget a payment?",
       options: [
-        { text: "Whenever you want something urgently", isCorrect: false },
-        { text: "Only when you have no other options and have a repayment plan", isCorrect: true },
-        { text: "For all emergencies, regardless of cost", isCorrect: false },
-        { text: "Never, emergencies should only be paid with cash", isCorrect: false }
+        { text: "Don't worry about it", isCorrect: false },
+        { text: "Use a debit card instead", isCorrect: false },
+        { text: "Set up autopay", isCorrect: true },
+        { text: "Pay only when you get reminders", isCorrect: false }
       ]
     }
   ]
@@ -107,40 +107,39 @@ const whenNotToUseLesson = {
       <p>Using credit cards in these situations can lead to financial trouble:</p>
       
       <ul className="list-disc pl-5 space-y-2">
-        <li><strong>Impulse Purchases</strong> - If you didn't plan to buy it, use cash instead</li>
-        <li><strong>To Impress Others</strong> - Never spend to show off</li>
-        <li><strong>When You Can't Pay Off the Balance</strong> - High interest debt accumulates quickly</li>
-        <li><strong>Cash Advances</strong> - Extremely high fees and interest rates begin immediately</li>
-        <li><strong>Everyday Small Purchases</strong> - These can add up without you noticing</li>
+        <li><strong>When You Can't Pay it Back</strong> - Don't charge what you can't pay by the billing cycle end</li>
+        <li><strong>For Major Expenses Without a Plan</strong> - Rent or tuition should not be put on credit without a repayment plan</li>
+        <li><strong>When Tempted to Overspend</strong> - Credit cards can make impulse purchases too easy</li>
+        <li><strong>For Cash Advances</strong> - These come with high fees and immediate interest charges</li>
       </ul>
     </div>
   ),
   quiz: [
     {
-      question: "Why should you avoid using credit cards for impulse purchases?",
+      question: "When should you NOT use a credit card?",
       options: [
-        { text: "Credit cards don't work for small purchases", isCorrect: false },
-        { text: "Impulse purchases are never worth buying", isCorrect: false },
-        { text: "You might spend money you haven't budgeted", isCorrect: true },
-        { text: "Credit cards are too slow for quick purchases", isCorrect: false }
+        { text: "Buying groceries within your budget", isCorrect: false },
+        { text: "Paying for gas", isCorrect: false },
+        { text: "Covering rent you can't afford", isCorrect: true },
+        { text: "Monthly phone bill", isCorrect: false }
       ]
     },
     {
-      question: "What makes credit card cash advances problematic?",
+      question: "Which action can hurt your financial health?",
       options: [
-        { text: "They have extremely high fees and immediate interest", isCorrect: true },
-        { text: "They take too long to process", isCorrect: false },
-        { text: "They require a PIN number", isCorrect: false },
-        { text: "They are limited to small amounts", isCorrect: false }
+        { text: "Paying the full balance on time", isCorrect: false },
+        { text: "Using the card only for emergencies", isCorrect: false },
+        { text: "Paying only the minimum and carrying a balance", isCorrect: true },
+        { text: "Using a rewards credit card for small purchases", isCorrect: false }
       ]
     },
     {
-      question: "When should you absolutely avoid using a credit card?",
+      question: "What is a cash advance on a credit card?",
       options: [
-        { text: "For all online purchases", isCorrect: false },
-        { text: "When traveling internationally", isCorrect: false },
-        { text: "When you can't pay off the balance", isCorrect: true },
-        { text: "For subscription services", isCorrect: false }
+        { text: "A free loan", isCorrect: false },
+        { text: "Using your credit card to withdraw cash, usually with high fees", isCorrect: true },
+        { text: "A bonus payment", isCorrect: false },
+        { text: "A refund", isCorrect: false }
       ]
     }
   ]

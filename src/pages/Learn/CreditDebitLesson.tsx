@@ -157,6 +157,7 @@ const CreditDebitLesson: React.FC = () => {
       setCurrentLessonIndex(prevIndex => prevIndex + 1);
       window.scrollTo(0, 0);
     } else {
+      // After completing all lessons, show completion message and then navigate back
       navigate("/learn"); // Return to learn page after completing all lessons
     }
   };

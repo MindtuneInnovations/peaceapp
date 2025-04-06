@@ -11,6 +11,7 @@ import Invest from "./pages/Invest";
 import Connect from "./pages/Connect";
 import Earn from "./pages/Earn";
 import NotFound from "./pages/NotFound";
+import CreditDebitLesson from "./pages/Learn/CreditDebitLesson";
 
 const queryClient = new QueryClient();
 
@@ -23,6 +24,7 @@ const App = () => (
         <Routes>
           <Route path="/" element={<Index />} />
           <Route path="/learn" element={<Learn />} />
+          <Route path="/learn/credit-debit" element={<CreditDebitLesson />} />
           <Route path="/practice" element={<Practice />} />
           <Route path="/earn" element={<Earn />} />
           <Route path="/invest" element={<Invest />} />

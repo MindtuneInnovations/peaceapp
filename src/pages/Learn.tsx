@@ -1,4 +1,3 @@
-
 import React from "react";
 import { ArrowLeft, Bell } from "lucide-react";
 import { Link } from "react-router-dom";
@@ -64,9 +63,11 @@ const Learn: React.FC = () => {
               </div>
             </div>
           </div>
-          <button className="w-full bg-[#0084FF] text-white font-medium py-3 rounded-lg mt-4">
-            Start Learning
-          </button>
+          <Link to="/learn/credit-debit">
+            <button className="w-full bg-[#0084FF] text-white font-medium py-3 rounded-lg mt-4">
+              Start Learning
+            </button>
+          </Link>
         </div>
 
         <div className="bg-[#1E1E2E] rounded-xl p-4">

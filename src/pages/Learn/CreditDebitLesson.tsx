@@ -1,5 +1,5 @@
 
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { ArrowLeft, Bell } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import BottomNav from "@/components/layout/BottomNav";
@@ -149,18 +149,29 @@ const lessons = [whyGetCreditCardLesson, whenToUseLesson, whenNotToUseLesson];
 
 const CreditDebitLesson: React.FC = () => {
   const navigate = useNavigate();
-  const [currentLessonIndex, setCurrentLessonIndex] = React.useState(0);
+  const [currentLessonIndex, setCurrentLessonIndex] = useState(0);
+  const [lessonKey, setLessonKey] = useState(0); // Add a key to force re-render
+
+  // Get current lesson based on the index
   const currentLesson = lessons[currentLessonIndex];
 
   const handleLessonComplete = () => {
     if (currentLessonIndex < lessons.length - 1) {
+      // Move to the next lesson
       setCurrentLessonIndex(prevIndex => prevIndex + 1);
+      // Force LessonContent to re-render with new lesson data
+      setLessonKey(prev => prev + 1);
       window.scrollTo(0, 0);
     } else {
-      // After completing all lessons, show completion message and then navigate back
-      navigate("/learn"); // Return to learn page after completing all lessons
+      // After completing all lessons, navigate back to learn page
+      navigate("/learn");
     }
   };
+
+  // Reset the quiz state and scroll to top when changing lessons
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [currentLessonIndex]);
 
   return (
     <div className="min-h-screen flex flex-col bg-[#121212]">
@@ -185,7 +196,11 @@ const CreditDebitLesson: React.FC = () => {
 
       <main className="flex-1 flex flex-col gap-4 pt-4 pb-20 px-4">
         <LessonContent 
-          {...currentLesson}
+          key={lessonKey} // Add a key prop to force re-render when lesson changes
+          title={currentLesson.title}
+          description={currentLesson.description}
+          content={currentLesson.content}
+          quiz={currentLesson.quiz}
           onComplete={handleLessonComplete}
           lessonNumber={currentLessonIndex + 1}
           totalLessons={lessons.length}

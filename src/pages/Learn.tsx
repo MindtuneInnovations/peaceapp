@@ -1,3 +1,4 @@
+
 import React from "react";
 import { ArrowLeft, Bell } from "lucide-react";
 import { Link } from "react-router-dom";
@@ -36,6 +37,7 @@ const Learn: React.FC = () => {
           </div>
         </div>
 
+        {/* Credit Card vs. Debit Card */}
         <div className="bg-[#1E1E2E] rounded-xl p-4">
           <div className="flex gap-4 items-center">
             <div className="bg-[#0084FF] p-2 rounded-lg">
@@ -60,6 +62,11 @@ const Learn: React.FC = () => {
                   </svg>
                   <span className="text-[#E0E0E0] text-xs">Beginner</span>
                 </div>
+                <div className="flex items-center gap-1 ml-auto">
+                  <div className="bg-[#2a2a3a] px-2 py-1 rounded text-[#5DADEC] text-xs">
+                    3 lessons
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -69,7 +76,8 @@ const Learn: React.FC = () => {
             </button>
           </Link>
         </div>
-
+        
+        {/* Smart Investing */}
         <div className="bg-[#1E1E2E] rounded-xl p-4">
           <div className="flex gap-4 items-center">
             <div className="bg-[#7C5CFF] p-2 rounded-lg">
@@ -94,6 +102,11 @@ const Learn: React.FC = () => {
                   </svg>
                   <span className="text-[#E0E0E0] text-xs">Beginner</span>
                 </div>
+                <div className="flex items-center gap-1 ml-auto">
+                  <div className="bg-[#2a2a3a] px-2 py-1 rounded text-[#5DADEC] text-xs">
+                    4 lessons
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -102,6 +115,7 @@ const Learn: React.FC = () => {
           </button>
         </div>
 
+        {/* Retirement Accounts */}
         <div className="bg-[#1E1E2E] rounded-xl p-4">
           <div className="flex gap-4 items-center">
             <div className="bg-[#00C48C] p-2 rounded-lg">
@@ -126,6 +140,11 @@ const Learn: React.FC = () => {
                   </svg>
                   <span className="text-[#E0E0E0] text-xs">Beginner</span>
                 </div>
+                <div className="flex items-center gap-1 ml-auto">
+                  <div className="bg-[#2a2a3a] px-2 py-1 rounded text-[#5DADEC] text-xs">
+                    2 lessons
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -134,6 +153,7 @@ const Learn: React.FC = () => {
           </button>
         </div>
 
+        {/* 529 Plan */}
         <div className="bg-[#1E1E2E] rounded-xl p-4">
           <div className="flex gap-4 items-center">
             <div className="bg-gradient-to-r from-[#FF9500] to-[#FF5E3A] p-2 rounded-lg">
@@ -164,6 +184,11 @@ const Learn: React.FC = () => {
                     <path d="M13.3066 5.6875L9.29688 4.94375L7.5 1.3125C7.44688 1.20313 7.35938 1.11562 7.25 1.0625C6.98438 0.934375 6.65938 1.05 6.53125 1.3125L4.73438 4.94375L0.724996 5.6875C0.603121 5.70938 0.493746 5.78125 0.418746 5.87813C0.326871 5.99375 0.284371 6.14375 0.301871 6.29375C0.319371 6.44375 0.395621 6.58125 0.515621 6.6625L3.40938 9.075L2.5375 13.0625C2.51563 13.1641 2.52188 13.2703 2.55625 13.3672C2.59063 13.4641 2.65156 13.5469 2.73125 13.6078C2.81094 13.6687 2.90625 13.7047 3.00625 13.7109C3.10625 13.7172 3.20625 13.6937 3.29375 13.6437L7 11.6812L10.7094 13.6437C10.7812 13.6844 10.8594 13.7031 10.9375 13.7031C11.0219 13.7031 11.1063 13.6812 11.1812 13.6391C11.3531 13.5328 11.45 13.3437 11.4344 13.1422L10.5969 9.14063L13.4813 6.67188C13.5781 6.59063 13.65 6.48125 13.6719 6.35937C13.7156 6.125 13.5625 5.89687 13.3066 5.6875Z" fill="#FFC107" />
                   </svg>
                   <span className="text-[#E0E0E0] text-xs">Beginner</span>
+                </div>
+                <div className="flex items-center gap-1 ml-auto">
+                  <div className="bg-[#2a2a3a] px-2 py-1 rounded text-[#5DADEC] text-xs">
+                    1 lesson
+                  </div>
                 </div>
               </div>
             </div>

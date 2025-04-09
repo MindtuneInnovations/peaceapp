@@ -3,8 +3,14 @@ import React from "react";
 import { ArrowLeft, Bell, Trophy, LockIcon } from "lucide-react";
 import { Link } from "react-router-dom";
 import BottomNav from "@/components/layout/BottomNav";
+import { Progress } from "@/components/ui/progress";
 
 const Earn: React.FC = () => {
+  // Mock data for student progress
+  const totalLessons = 10;
+  const completedLessons = 1;
+  const progressPercentage = (completedLessons / totalLessons) * 100;
+
   return (
     <div className="min-h-screen flex flex-col bg-[#121212]">
       <header className="flex justify-between items-center h-14 sticky z-10 bg-[#1A1A1A] px-4 py-3 border-b-[#333] border-b border-solid top-0">
@@ -35,6 +41,16 @@ const Earn: React.FC = () => {
       </header>
 
       <main className="flex-1 flex flex-col gap-4 pt-4 pb-20 px-4">
+        {/* Student Progress Overview */}
+        <div className="bg-[#1E1E2E] rounded-xl p-4">
+          <h2 className="text-gray-300 text-lg mb-2">Learning Progress</h2>
+          <div className="flex justify-between items-center">
+            <div className="text-xl text-[#5DADEC] font-medium">{completedLessons}/{totalLessons} Lessons</div>
+            <span className="text-gray-300">{progressPercentage.toFixed(0)}% Complete</span>
+          </div>
+          <Progress className="h-2 mt-2 bg-[#333333]" value={progressPercentage} />
+        </div>
+
         <div className="bg-[#1E1E2E] rounded-xl p-4">
           <h2 className="text-gray-300 text-lg mb-2">Total Earnings</h2>
           <div className="flex justify-between items-center">
@@ -77,6 +93,27 @@ const Earn: React.FC = () => {
           <button className="w-full bg-[#0084FF] text-white font-medium py-3 rounded-lg mt-4">
             Redeem
           </button>
+        </div>
+
+        <h2 className="text-white text-xl font-bold mt-2">Learning Stats</h2>
+        
+        <div className="bg-[#1E1E2E] rounded-xl p-4 grid grid-cols-2 gap-4">
+          <div className="bg-[#252538] p-3 rounded-lg flex flex-col items-center">
+            <span className="text-gray-400 text-sm">Time Spent</span>
+            <span className="text-2xl text-[#5DADEC] font-bold mt-1">15 min</span>
+          </div>
+          <div className="bg-[#252538] p-3 rounded-lg flex flex-col items-center">
+            <span className="text-gray-400 text-sm">Lessons Done</span>
+            <span className="text-2xl text-[#5DADEC] font-bold mt-1">{completedLessons}</span>
+          </div>
+          <div className="bg-[#252538] p-3 rounded-lg flex flex-col items-center">
+            <span className="text-gray-400 text-sm">Total Earned</span>
+            <span className="text-2xl text-[#5DADEC] font-bold mt-1">$1.00</span>
+          </div>
+          <div className="bg-[#252538] p-3 rounded-lg flex flex-col items-center">
+            <span className="text-gray-400 text-sm">Quiz Score</span>
+            <span className="text-2xl text-[#5DADEC] font-bold mt-1">90%</span>
+          </div>
         </div>
 
         <h2 className="text-white text-xl font-bold mt-2">Up Next</h2>

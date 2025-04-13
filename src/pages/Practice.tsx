@@ -86,6 +86,38 @@ const Practice: React.FC = () => {
   const [selectedETF, setSelectedETF] = useState<ETF | null>(null);
   const [shareAmount, setShareAmount] = useState<string>("");
   
+  // Load data from localStorage on component mount
+  useEffect(() => {
+    const savedBalance = localStorage.getItem('practiceBalance');
+    const savedHoldings = localStorage.getItem('practiceHoldings');
+    
+    if (savedBalance) {
+      setBalance(parseFloat(savedBalance));
+    } else {
+      localStorage.setItem('practiceBalance', String(10000));
+    }
+    
+    if (savedHoldings) {
+      setHoldings(JSON.parse(savedHoldings));
+    }
+    
+    // Check if user just completed a lesson
+    const lessonCompleted = sessionStorage.getItem('lessonCompleted');
+    if (lessonCompleted) {
+      toast({
+        title: "Practice Mode",
+        description: "Use your earnings from lessons to invest in ETFs and build your portfolio!",
+      });
+      sessionStorage.removeItem('lessonCompleted');
+    }
+  }, []);
+  
+  // Save data to localStorage whenever it changes
+  useEffect(() => {
+    localStorage.setItem('practiceBalance', String(balance));
+    localStorage.setItem('practiceHoldings', JSON.stringify(holdings));
+  }, [balance, holdings]);
+  
   // Calculate total portfolio value
   const portfolioValue = Object.entries(holdings).reduce((total, [etfId, holding]) => {
     const etf = mockETFs.find(e => e.id === etfId);
@@ -94,7 +126,7 @@ const Practice: React.FC = () => {
   
   // Function to buy ETF shares
   const buyShares = (etf: ETF) => {
-    const sharesToBuy = parseInt(shareAmount);
+    const sharesToBuy = parseFloat(shareAmount);
     
     if (isNaN(sharesToBuy) || sharesToBuy <= 0) {
       toast({
@@ -144,7 +176,7 @@ const Practice: React.FC = () => {
   
   // Function to sell ETF shares
   const sellShares = (etf: ETF) => {
-    const sharesToSell = parseInt(shareAmount);
+    const sharesToSell = parseFloat(shareAmount);
     
     if (isNaN(sharesToSell) || sharesToSell <= 0) {
       toast({
@@ -235,6 +267,29 @@ const Practice: React.FC = () => {
               <div className="p-4 bg-[#252538] rounded-lg">
                 <p className="text-gray-400 mb-1 text-sm">Portfolio Value</p>
                 <p className="text-xl font-bold text-[#5DADEC]">${portfolioValue.toFixed(2)}</p>
+              </div>
+            </div>
+            
+            <div className="bg-gradient-to-r from-[#7C5CFF20] to-[#5DADEC20] p-4 rounded-lg mb-4 border border-[#7C5CFF50]">
+              <div className="flex items-start gap-3">
+                <div className="bg-[#7C5CFF] p-2 rounded-lg shrink-0">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 2L2 7L12 12L22 7L12 2Z" fill="white" />
+                    <path d="M2 17L12 22L22 17" stroke="white" strokeWidth="2" />
+                    <path d="M2 12L12 17L22 12" stroke="white" strokeWidth="2" />
+                  </svg>
+                </div>
+                <div>
+                  <h3 className="text-white font-semibold">Complete Lessons to Earn More</h3>
+                  <p className="text-gray-300 text-sm mt-1">
+                    Complete educational modules to earn more virtual cash for investing!
+                  </p>
+                  <Link to="/learn" className="inline-block mt-2">
+                    <Button size="sm" className="bg-[#7C5CFF]">
+                      Go to Lessons
+                    </Button>
+                  </Link>
+                </div>
               </div>
             </div>
             

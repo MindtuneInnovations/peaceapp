@@ -1,16 +1,19 @@
 
 import React, { useState, useEffect } from "react";
 import { ArrowLeft } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { Button } from "@/components/ui/button";
 import LessonContent from "@/components/learn/LessonContent";
 import SmartInvestingIntroLesson from "@/components/learn/lessons/SmartInvestingIntroLesson";
+import { toast } from "@/hooks/use-toast";
 
 const SmartInvestingLesson: React.FC = () => {
   const [showingVideo, setShowingVideo] = useState<boolean>(true);
   const [showingLesson, setShowingLesson] = useState<boolean>(false);
   const [videoCompleted, setVideoCompleted] = useState<boolean>(false);
+  const [lessonCompleted, setLessonCompleted] = useState<boolean>(false);
+  const navigate = useNavigate();
   
   useEffect(() => {
     // Initialize YouTube iframe API
@@ -36,6 +39,29 @@ const SmartInvestingLesson: React.FC = () => {
   // For development purposes, this will let you skip the video
   const handleSkipVideo = () => {
     setVideoCompleted(true);
+  };
+  
+  const handleLessonComplete = () => {
+    setLessonCompleted(true);
+    
+    // Award the user with $10 for completing the lesson
+    const currentBalance = parseFloat(localStorage.getItem('practiceBalance') || '10000');
+    localStorage.setItem('practiceBalance', (currentBalance + 10).toString());
+    
+    // Show reward notification
+    toast({
+      title: "Lesson Completed! 🎉",
+      description: "You earned $10 to invest in the Practice ETF simulator",
+      duration: 5000,
+    });
+    
+    // Show the reward modal
+    setShowingLesson(false);
+    setShowingVideo(false);
+  };
+  
+  const goToPractice = () => {
+    navigate('/practice');
   };
   
   // This is just placeholder quiz data - you'll want to create actual quiz data
@@ -134,10 +160,46 @@ const SmartInvestingLesson: React.FC = () => {
             description="Understanding investment fundamentals" 
             content={<SmartInvestingIntroLesson onStartQuiz={() => {}} />}
             quiz={investingQuiz}
-            onComplete={() => {}}
+            onComplete={handleLessonComplete}
             lessonNumber={1}
             totalLessons={4}
           />
+        )}
+        
+        {lessonCompleted && !showingVideo && !showingLesson && (
+          <div className="flex flex-col items-center justify-center gap-6 py-8">
+            <div className="w-20 h-20 bg-green-500 rounded-full flex items-center justify-center">
+              <svg width="40" height="40" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M9 16.2L4.8 12L3.4 13.4L9 19L21 7L19.6 5.6L9 16.2Z" fill="white" />
+              </svg>
+            </div>
+            
+            <div className="text-center">
+              <h2 className="text-[#E0E0E0] text-2xl font-bold mb-2">Congratulations!</h2>
+              <p className="text-[#999] text-base">
+                You've completed the Smart Investing lesson and earned $10
+              </p>
+            </div>
+            
+            <div className="bg-[#1E1E2E] p-6 rounded-xl w-full max-w-md border border-[#333] text-center">
+              <h3 className="text-[#E0E0E0] text-lg font-semibold mb-4">Your Reward</h3>
+              <div className="flex justify-center items-center gap-3 mb-6">
+                <span className="text-[#7C5CFF] text-3xl font-bold">$10</span>
+                <span className="text-[#999]">has been added to your practice account</span>
+              </div>
+              
+              <p className="text-[#999] text-sm mb-6">
+                Now you can practice investing with ETFs in our simulator
+              </p>
+              
+              <Button 
+                onClick={goToPractice}
+                className="w-full bg-[#7C5CFF]"
+              >
+                Start Investing in Practice Mode
+              </Button>
+            </div>
+          </div>
         )}
       </div>
     </div>

@@ -110,9 +110,11 @@ const Learn: React.FC = () => {
               </div>
             </div>
           </div>
-          <button className="w-full bg-[#7C5CFF] text-white font-medium py-3 rounded-lg mt-4">
-            Start Learning
-          </button>
+          <Link to="/learn/smart-investing">
+            <button className="w-full bg-[#7C5CFF] text-white font-medium py-3 rounded-lg mt-4">
+              Start Learning
+            </button>
+          </Link>
         </div>
 
         {/* Retirement Accounts */}

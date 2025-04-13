@@ -1,6 +1,6 @@
 
 import React from "react";
-import { ArrowLeft, Bell } from "lucide-react";
+import { ArrowLeft, Bell, ImageIcon } from "lucide-react";
 import { Link } from "react-router-dom";
 import BottomNav from "@/components/layout/BottomNav";
 
@@ -32,7 +32,7 @@ const Connect: React.FC = () => {
             />
             <div className="flex justify-between">
               <button className="p-2 rounded-lg bg-[#181C2E]">
-                <Image className="text-gray-400" size={20} />
+                <ImageIcon className="text-gray-400" size={20} />
               </button>
               <button className="px-6 py-2 bg-[#0084FF] text-white font-medium rounded-lg">
                 Post

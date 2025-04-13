@@ -1,75 +1,86 @@
 
-import React from "react";
+import React, { useState } from "react";
 import { ArrowLeft } from "lucide-react";
 import { Link } from "react-router-dom";
 import LessonContent from "@/components/learn/LessonContent";
+import CreditCardEarlyLesson from "@/components/learn/lessons/CreditCardEarlyLesson";
+import CreditCardUseLesson from "@/components/learn/lessons/CreditCardUseLesson";
+import CreditCardAvoidLesson from "@/components/learn/lessons/CreditCardAvoidLesson";
+import { earlyCardQuiz, cardUseQuiz, cardAvoidQuiz } from "@/components/learn/lessons/creditCardQuizData";
 
 const CreditDebitLesson: React.FC = () => {
-  // Sample content for the lesson
-  const lessonData = {
-    title: "Credit vs Debit Cards",
-    description: "Understanding the key differences and when to use each",
-    lessonNumber: 1,
-    totalLessons: 5,
-    content: (
-      <>
-        <h3 className="text-lg font-semibold mb-3">What's the Difference?</h3>
-        <p className="mb-4">
-          A <strong>debit card</strong> takes money directly from your bank account when you make a purchase. It's like paying with cash, but more convenient.
-        </p>
-        <p className="mb-4">
-          A <strong>credit card</strong> lets you borrow money up to a certain limit. You're borrowing from the card issuer with the promise to pay it back later, often with interest if you don't pay the full amount.
-        </p>
-        
-        <h3 className="text-lg font-semibold mb-3 mt-5">When to Use Each</h3>
-        <ul className="list-disc pl-5 mb-4">
-          <li className="mb-2">Use <strong>debit cards</strong> for everyday expenses and to avoid debt.</li>
-          <li className="mb-2">Use <strong>credit cards</strong> to build credit history, earn rewards, and for added purchase protection.</li>
-        </ul>
-        
-        <h3 className="text-lg font-semibold mb-3 mt-5">Watch Out For</h3>
-        <p className="mb-2">
-          Credit cards: High interest rates, annual fees, and the temptation to spend more than you can afford to pay back.
-        </p>
-        <p>
-          Debit cards: Fewer purchase protections and potential overdraft fees if you spend more than your balance.
-        </p>
-      </>
-    ),
-    quiz: [
-      {
-        question: "What is the main difference between a debit and credit card?",
-        options: [
-          { text: "Debit cards have higher fees", isCorrect: false },
-          { text: "Credit cards always have better rewards", isCorrect: false },
-          { text: "Debit cards use money from your bank account", isCorrect: true },
-          { text: "Credit cards can only be used online", isCorrect: false }
-        ]
-      },
-      {
-        question: "When is it better to use a credit card?",
-        options: [
-          { text: "For all purchases, all the time", isCorrect: false },
-          { text: "For building credit history and purchase protection", isCorrect: true },
-          { text: "Only for emergency purchases", isCorrect: false },
-          { text: "Only when you've run out of cash", isCorrect: false }
-        ]
-      },
-      {
-        question: "What should you watch out for with credit cards?",
-        options: [
-          { text: "High interest rates if you don't pay in full", isCorrect: true },
-          { text: "They expire too quickly", isCorrect: false },
-          { text: "Limited acceptance at stores", isCorrect: false },
-          { text: "They're too heavy to carry", isCorrect: false }
-        ]
-      }
-    ],
-    onComplete: () => {
-      // Navigate back to learn page 
-      window.location.href = "/learn";
+  const [currentLesson, setCurrentLesson] = useState<number>(1);
+  const [showingQuiz, setShowingQuiz] = useState<boolean>(false);
+  const [totalScore, setTotalScore] = useState<number>(0);
+  const [completedLessons, setCompletedLessons] = useState<number[]>([]);
+  
+  const handleStartQuiz = () => {
+    setShowingQuiz(true);
+  };
+  
+  const handleQuizComplete = (score: number) => {
+    setTotalScore(prev => prev + score);
+    setCompletedLessons(prev => [...prev, currentLesson]);
+    
+    // If we're on the last lesson, don't advance
+    if (currentLesson < 3) {
+      setCurrentLesson(prev => prev + 1);
+      setShowingQuiz(false);
+    } else {
+      // Show completion state
+      setShowingQuiz(false);
     }
   };
+  
+  const navigateToLesson = (lessonNumber: number) => {
+    setCurrentLesson(lessonNumber);
+    setShowingQuiz(false);
+  };
+  
+  const getCurrentLessonData = () => {
+    switch (currentLesson) {
+      case 1:
+        return {
+          title: "Why Get a Credit Card Early?",
+          description: "Understanding the benefits of early credit",
+          lessonNumber: 1,
+          totalLessons: 3,
+          quiz: earlyCardQuiz,
+          content: <CreditCardEarlyLesson onStartQuiz={handleStartQuiz} />
+        };
+      case 2:
+        return {
+          title: "When to Use Your Credit Card",
+          description: "Making smart choices with credit",
+          lessonNumber: 2,
+          totalLessons: 3,
+          quiz: cardUseQuiz,
+          content: <CreditCardUseLesson onStartQuiz={handleStartQuiz} />
+        };
+      case 3:
+        return {
+          title: "When NOT to Use Your Credit Card",
+          description: "Avoiding common credit pitfalls",
+          lessonNumber: 3,
+          totalLessons: 3,
+          quiz: cardAvoidQuiz,
+          content: <CreditCardAvoidLesson onStartQuiz={handleStartQuiz} />
+        };
+      default:
+        return {
+          title: "Why Get a Credit Card Early?",
+          description: "Understanding the benefits of early credit",
+          lessonNumber: 1,
+          totalLessons: 3,
+          quiz: earlyCardQuiz,
+          content: <CreditCardEarlyLesson onStartQuiz={handleStartQuiz} />
+        };
+    }
+  };
+  
+  const lessonData = getCurrentLessonData();
+  
+  const allLessonsCompleted = completedLessons.length === 3;
 
   return (
     <div className="min-h-screen flex flex-col bg-[#121212]">
@@ -78,20 +89,74 @@ const CreditDebitLesson: React.FC = () => {
           <Link to="/learn">
             <ArrowLeft className="text-white" size={24} />
           </Link>
-          <h1 className="text-white text-xl font-bold">Credit vs Debit Cards</h1>
+          <h1 className="text-white text-xl font-bold">Credit vs. Debit Card</h1>
         </div>
       </header>
       
       <div className="p-4">
-        <LessonContent 
-          title={lessonData.title}
-          description={lessonData.description}
-          content={lessonData.content}
-          quiz={lessonData.quiz}
-          onComplete={lessonData.onComplete}
-          lessonNumber={lessonData.lessonNumber}
-          totalLessons={lessonData.totalLessons}
-        />
+        {/* Navigation pills */}
+        {!allLessonsCompleted && (
+          <div className="flex space-x-2 mb-4">
+            <button 
+              className={`px-3 py-1 rounded-full text-sm ${currentLesson === 1 ? 'bg-[#5DADEC] text-white' : 'bg-[#333] text-[#999]'}`}
+              onClick={() => navigateToLesson(1)}
+            >
+              Lesson 1
+            </button>
+            <button 
+              className={`px-3 py-1 rounded-full text-sm ${currentLesson === 2 ? 'bg-[#5DADEC] text-white' : 'bg-[#333] text-[#999]'}`}
+              onClick={() => navigateToLesson(2)}
+              disabled={!completedLessons.includes(1) && currentLesson !== 2}
+            >
+              Lesson 2
+            </button>
+            <button 
+              className={`px-3 py-1 rounded-full text-sm ${currentLesson === 3 ? 'bg-[#5DADEC] text-white' : 'bg-[#333] text-[#999]'}`}
+              onClick={() => navigateToLesson(3)}
+              disabled={!completedLessons.includes(2) && currentLesson !== 3}
+            >
+              Lesson 3
+            </button>
+          </div>
+        )}
+        
+        {allLessonsCompleted ? (
+          <div className="mt-8 text-center">
+            <div className="w-20 h-20 bg-[#5DADEC] rounded-full flex items-center justify-center mx-auto mb-6">
+              <svg width="40" height="40" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M21 6L9 18L3 12" stroke="white" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
+            </div>
+            <h2 className="text-[#E0E0E0] text-2xl font-bold mb-2">Congratulations!</h2>
+            <p className="text-[#999] text-lg mb-4">
+              You've completed all lessons and scored {totalScore}/9 on the quizzes.
+            </p>
+            
+            <div className="mt-6 bg-[#232323] p-4 rounded-xl">
+              <p className="text-[#E0E0E0] text-md">
+                Achievement Unlocked: Credit Card Beginner ✅
+              </p>
+            </div>
+            
+            <Link to="/learn">
+              <button className="w-full mt-8 bg-[#5DADEC] text-white font-medium py-3 rounded-lg">
+                Back to Learning
+              </button>
+            </Link>
+          </div>
+        ) : showingQuiz ? (
+          <LessonContent 
+            title={lessonData.title}
+            description={lessonData.description}
+            content={null}
+            quiz={lessonData.quiz}
+            onComplete={() => handleQuizComplete(lessonData.quiz.length)}
+            lessonNumber={lessonData.lessonNumber}
+            totalLessons={lessonData.totalLessons}
+          />
+        ) : (
+          lessonData.content
+        )}
       </div>
     </div>
   );

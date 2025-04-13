@@ -2,7 +2,6 @@
 import React from "react";
 import { ArrowRight, Check, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 
 interface QuizOption {
@@ -40,7 +39,7 @@ const LessonContent: React.FC<LessonContentProps> = ({
   const [isCorrect, setIsCorrect] = React.useState(false);
   const [quizCompleted, setQuizCompleted] = React.useState(false);
   const [score, setScore] = React.useState(0);
-  const [showLesson, setShowLesson] = React.useState(true);
+  const [showLesson, setShowLesson] = React.useState(content !== null);
 
   const currentQuestion = quiz[currentQuestionIndex];
 
@@ -81,7 +80,7 @@ const LessonContent: React.FC<LessonContentProps> = ({
         </div>
       </div>
 
-      {showLesson ? (
+      {showLesson && content ? (
         <>
           <div className="text-[#E0E0E0] text-base leading-relaxed mt-2">
             {content}
@@ -108,7 +107,7 @@ const LessonContent: React.FC<LessonContentProps> = ({
           {score === quiz.length && (
             <div className="mt-4 bg-[#232323] p-3 rounded-xl">
               <p className="text-[#E0E0E0] text-sm">
-                Achievement Unlocked: Credit Card Beginner
+                Great job! Keep going to earn your Credit Card Beginner badge.
               </p>
             </div>
           )}
@@ -117,7 +116,7 @@ const LessonContent: React.FC<LessonContentProps> = ({
             className="w-full mt-6 bg-[#5DADEC]"
             onClick={onComplete}
           >
-            Continue to Next Lesson
+            Continue
             <ArrowRight className="ml-2 h-4 w-4" />
           </Button>
         </div>

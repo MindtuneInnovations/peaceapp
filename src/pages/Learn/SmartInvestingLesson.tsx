@@ -1,5 +1,5 @@
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { ArrowLeft } from "lucide-react";
 import { Link } from "react-router-dom";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
@@ -11,6 +11,18 @@ const SmartInvestingLesson: React.FC = () => {
   const [showingVideo, setShowingVideo] = useState<boolean>(true);
   const [showingLesson, setShowingLesson] = useState<boolean>(false);
   const [videoCompleted, setVideoCompleted] = useState<boolean>(false);
+  
+  useEffect(() => {
+    // Initialize YouTube iframe API
+    if (!window.YT) {
+      const tag = document.createElement('script');
+      tag.src = 'https://www.youtube.com/iframe_api';
+      const firstScriptTag = document.getElementsByTagName('script')[0];
+      if (firstScriptTag.parentNode) {
+        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+      }
+    }
+  }, []);
   
   const handleVideoEnd = () => {
     setVideoCompleted(true);
@@ -86,15 +98,6 @@ const SmartInvestingLesson: React.FC = () => {
                     frameBorder="0" 
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
                     allowFullScreen
-                    onLoad={() => {
-                      // Initialize YouTube iframe API
-                      if (!window.YT) {
-                        const tag = document.createElement('script');
-                        tag.src = 'https://www.youtube.com/iframe_api';
-                        const firstScriptTag = document.getElementsByTagName('script')[0];
-                        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
-                      }
-                    }}
                   ></iframe>
                   
                   {/* For development purposes - remove this in production */}

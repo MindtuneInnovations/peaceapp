@@ -78,31 +78,29 @@ const SmartInvestingLesson: React.FC = () => {
             
             <div className="rounded-xl overflow-hidden bg-[#1A1A1A] border border-[#333]">
               <AspectRatio ratio={16/9}>
-                <div className="relative w-full h-full bg-black flex flex-col items-center justify-center">
-                  {/* Video placeholder - replace this with your actual video */}
-                  <div className="text-white text-center p-6">
-                    <p className="mb-3">Your investing video will appear here</p>
-                    <p className="text-sm text-gray-400">
-                      When deploying your app, place your MP4 file in the public folder
-                      and update the source path below
-                    </p>
-                  </div>
-                  
-                  {/* This video element will work when you add your video file */}
-                  <video
-                    className="w-full h-full object-contain hidden"
-                    controls
-                    onEnded={handleVideoEnd}
-                    poster="/placeholder.svg"
-                  >
-                    <source src="/your-video-file.mp4" type="video/mp4" />
-                    Your browser does not support the video tag.
-                  </video>
+                <div className="relative w-full h-full bg-black">
+                  <iframe 
+                    className="absolute w-full h-full" 
+                    src="https://www.youtube.com/embed/HmiCQgq3D0Y?enablejsapi=1" 
+                    title="Smart Investing Tutorial"
+                    frameBorder="0" 
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                    allowFullScreen
+                    onLoad={() => {
+                      // Initialize YouTube iframe API
+                      if (!window.YT) {
+                        const tag = document.createElement('script');
+                        tag.src = 'https://www.youtube.com/iframe_api';
+                        const firstScriptTag = document.getElementsByTagName('script')[0];
+                        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+                      }
+                    }}
+                  ></iframe>
                   
                   {/* For development purposes - remove this in production */}
                   <Button 
                     variant="outline" 
-                    className="mt-4 bg-transparent border border-gray-700 text-gray-300"
+                    className="absolute bottom-4 right-4 bg-transparent border border-gray-700 text-gray-300 z-10"
                     onClick={handleSkipVideo}
                   >
                     Skip Video (Development Only)

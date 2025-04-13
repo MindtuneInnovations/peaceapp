@@ -15,6 +15,9 @@ const Earn: React.FC = () => {
     <div className="min-h-screen flex flex-col bg-[#121212]">
       <header className="flex justify-between items-center h-14 sticky z-10 bg-[#1A1A1A] px-4 py-3 border-b-[#333] border-b border-solid top-0">
         <div className="flex items-center gap-3">
+          <Link to="/">
+            <ArrowLeft className="text-white" size={24} />
+          </Link>
           <div className="flex items-center gap-3">
             <svg
               width="30"

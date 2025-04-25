@@ -61,18 +61,14 @@ const InvestingSwipeGame: React.FC<Props> = ({ onComplete }) => {
   const sensors = useSensors(
     useSensor(PointerSensor, {
       activationConstraint: {
-        distance: 5,
+        distance: 5, // Small distance to differentiate between click and drag
       },
     })
   );
 
-  const handleDragEnd = (event: DragEndEvent) => {
-    const { delta } = event;
-    if (Math.abs(delta.x) < 100) return; // Minimum swipe distance
-
-    const swipedRight = delta.x > 0;
+  const handleAnswer = (isFact: boolean) => {
     const currentCard = investingCards[currentCardIndex];
-    const isAnswerCorrect = swipedRight === currentCard.isFact;
+    const isAnswerCorrect = isFact === currentCard.isFact;
 
     setIsCorrect(isAnswerCorrect);
     setShowExplanation(true);
@@ -100,6 +96,20 @@ const InvestingSwipeGame: React.FC<Props> = ({ onComplete }) => {
         setGameCompleted(true);
       }
     }, 2000);
+  };
+
+  const handleDragEnd = (event: DragEndEvent) => {
+    const { delta } = event;
+    if (Math.abs(delta.x) < 100) return; // Minimum swipe distance
+
+    const swipedRight = delta.x > 0;
+    handleAnswer(swipedRight);
+  };
+
+  const handleClick = (isFact: boolean) => {
+    if (!showExplanation) {
+      handleAnswer(isFact);
+    }
   };
 
   if (gameCompleted) {
@@ -146,7 +156,7 @@ const InvestingSwipeGame: React.FC<Props> = ({ onComplete }) => {
         </div>
 
         <div 
-          className="touch-none select-none cursor-grab active:cursor-grabbing bg-[#1E1E2E] p-6 rounded-xl w-full max-w-md border border-[#333] shadow-lg"
+          className="touch-none select-none cursor-grab active:cursor-grabbing bg-[#1E1E2E] p-6 rounded-xl w-full max-w-md border border-[#333] shadow-lg transform transition-transform duration-200"
           style={{ touchAction: 'none' }}
         >
           <p className="text-[#E0E0E0] text-lg font-medium text-center">
@@ -167,14 +177,24 @@ const InvestingSwipeGame: React.FC<Props> = ({ onComplete }) => {
         )}
 
         <div className="flex justify-between w-full max-w-md mt-4">
-          <div className="text-red-500">
+          <Button
+            variant="ghost"
+            className="flex flex-col items-center text-red-500 hover:text-red-400 hover:bg-red-500/10"
+            onClick={() => handleClick(false)}
+            disabled={showExplanation}
+          >
             <X size={24} />
             Fiction
-          </div>
-          <div className="text-green-500">
+          </Button>
+          <Button
+            variant="ghost"
+            className="flex flex-col items-center text-green-500 hover:text-green-400 hover:bg-green-500/10"
+            onClick={() => handleClick(true)}
+            disabled={showExplanation}
+          >
             <Check size={24} />
             Fact
-          </div>
+          </Button>
         </div>
       </div>
     </DndContext>

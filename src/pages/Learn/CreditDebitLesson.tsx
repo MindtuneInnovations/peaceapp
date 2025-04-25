@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { ArrowLeft } from "lucide-react";
 import { Link } from "react-router-dom";
@@ -22,12 +21,10 @@ const CreditDebitLesson: React.FC = () => {
     setTotalScore(prev => prev + score);
     setCompletedLessons(prev => [...prev, currentLesson]);
     
-    // If we're on the last lesson, don't advance
     if (currentLesson < 3) {
       setCurrentLesson(prev => prev + 1);
       setShowingQuiz(false);
     } else {
-      // Show completion state
       setShowingQuiz(false);
     }
   };
@@ -94,7 +91,6 @@ const CreditDebitLesson: React.FC = () => {
       </header>
       
       <div className="p-4">
-        {/* Navigation pills */}
         {!allLessonsCompleted && (
           <div className="flex space-x-2 mb-4">
             <button 
@@ -106,14 +102,12 @@ const CreditDebitLesson: React.FC = () => {
             <button 
               className={`px-3 py-1 rounded-full text-sm ${currentLesson === 2 ? 'bg-[#5DADEC] text-white' : 'bg-[#333] text-[#999]'}`}
               onClick={() => navigateToLesson(2)}
-              disabled={!completedLessons.includes(1) && currentLesson !== 2}
             >
               Lesson 2
             </button>
             <button 
               className={`px-3 py-1 rounded-full text-sm ${currentLesson === 3 ? 'bg-[#5DADEC] text-white' : 'bg-[#333] text-[#999]'}`}
               onClick={() => navigateToLesson(3)}
-              disabled={!completedLessons.includes(2) && currentLesson !== 3}
             >
               Lesson 3
             </button>

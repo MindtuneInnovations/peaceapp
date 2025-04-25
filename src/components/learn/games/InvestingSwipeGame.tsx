@@ -6,70 +6,35 @@ import { Button } from "@/components/ui/button";
 import { Check, X } from "lucide-react";
 import { playCorrectSound, playIncorrectSound, vibrate } from "@/utils/soundEffects";
 import confetti from 'canvas-confetti';
-
-interface InvestingCard {
-  statement: string;
-  isCorrect: boolean;
-  explanation: string;
-  isFact: boolean;
-}
-
-const investingCards: InvestingCard[] = [
-  {
-    statement: "Investing is the same as saving money in a piggy bank.",
-    isCorrect: false,
-    explanation: "Nope! Investing is putting money into things like stocks or bonds to grow it—not just storing it.",
-    isFact: false
-  },
-  {
-    statement: "The earlier you start investing, the more money you can make.",
-    isCorrect: true,
-    explanation: "Correct! Time lets your money grow thanks to compounding.",
-    isFact: true
-  },
-  {
-    statement: "Investing always guarantees profits.",
-    isCorrect: false,
-    explanation: "Nope! There's always a chance of losing money—that's risk.",
-    isFact: false
-  },
-  {
-    statement: "Diversifying your investments helps reduce risk.",
-    isCorrect: true,
-    explanation: "Yes! Spreading your money out keeps you safer if one thing drops.",
-    isFact: true
-  },
-  {
-    statement: "You need to be rich to start investing.",
-    isCorrect: false,
-    explanation: "Wrong! You can start investing with just a few dollars now.",
-    isFact: false
-  }
-];
+import { level1Cards, level2Cards } from './quizData';
 
 interface Props {
   onComplete: () => void;
+  level?: number;
 }
 
-const InvestingSwipeGame: React.FC<Props> = ({ onComplete }) => {
+const InvestingSwipeGame: React.FC<Props> = ({ onComplete, level = 1 }) => {
   const [currentCardIndex, setCurrentCardIndex] = useState(0);
   const [showExplanation, setShowExplanation] = useState(false);
   const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
   const [score, setScore] = useState(0);
   const [gameCompleted, setGameCompleted] = useState(false);
 
+  const cards = level === 1 ? level1Cards : level2Cards;
+  const currentCard = cards[currentCardIndex];
+  
   const sensors = useSensors(
     useSensor(PointerSensor, {
       activationConstraint: {
-        distance: 5, // Small distance to differentiate between click and drag
+        distance: 5,
       },
     })
   );
 
   const handleAnswer = (isFact: boolean) => {
-    const currentCard = investingCards[currentCardIndex];
+    if (showExplanation) return;
+    
     const isAnswerCorrect = isFact === currentCard.isFact;
-
     setIsCorrect(isAnswerCorrect);
     setShowExplanation(true);
 
@@ -90,7 +55,7 @@ const InvestingSwipeGame: React.FC<Props> = ({ onComplete }) => {
       setShowExplanation(false);
       setIsCorrect(null);
       
-      if (currentCardIndex < investingCards.length - 1) {
+      if (currentCardIndex < cards.length - 1) {
         setCurrentCardIndex(currentCardIndex + 1);
       } else {
         setGameCompleted(true);
@@ -100,16 +65,9 @@ const InvestingSwipeGame: React.FC<Props> = ({ onComplete }) => {
 
   const handleDragEnd = (event: DragEndEvent) => {
     const { delta } = event;
-    if (Math.abs(delta.x) < 100) return; // Minimum swipe distance
+    if (Math.abs(delta.x) < 100) return;
 
-    const swipedRight = delta.x > 0;
-    handleAnswer(swipedRight);
-  };
-
-  const handleClick = (isFact: boolean) => {
-    if (!showExplanation) {
-      handleAnswer(isFact);
-    }
+    handleAnswer(delta.x > 0);
   };
 
   if (gameCompleted) {
@@ -121,13 +79,15 @@ const InvestingSwipeGame: React.FC<Props> = ({ onComplete }) => {
         
         <div>
           <h2 className="text-2xl font-bold text-[#E0E0E0] mb-2">
-            🔥 Level 1 Complete!
+            {level === 1 ? "🔥 Level 1 Complete!" : "🏆 Level 1 Complete!"}
           </h2>
           <p className="text-[#999] mb-4">
-            You've earned the Investment Explorer Badge 🏅
+            {level === 1 
+              ? "You've earned the Investment Explorer Badge 🏅"
+              : "You've earned the 'ETF Explorer' badge"}
           </p>
           <p className="text-[#E0E0E0]">
-            Score: {score}/{investingCards.length}
+            Score: {score}/{cards.length}
           </p>
         </div>
 
@@ -135,13 +95,11 @@ const InvestingSwipeGame: React.FC<Props> = ({ onComplete }) => {
           onClick={onComplete}
           className="w-full bg-[#7C5CFF] text-white"
         >
-          Ready for Level 2: Stocks & Bonds
+          {level === 1 ? "Ready for Level 2: Stocks & Bonds" : "Continue Learning"}
         </Button>
       </div>
     );
   }
-
-  const currentCard = investingCards[currentCardIndex];
 
   return (
     <DndContext sensors={sensors} onDragEnd={handleDragEnd}>
@@ -151,7 +109,7 @@ const InvestingSwipeGame: React.FC<Props> = ({ onComplete }) => {
             Swipe right for ✅ Fact, left for ❌ Fiction
           </p>
           <p className="text-[#E0E0E0] text-sm mt-1">
-            Card {currentCardIndex + 1} of {investingCards.length}
+            Card {currentCardIndex + 1} of {cards.length}
           </p>
         </div>
 
@@ -180,7 +138,7 @@ const InvestingSwipeGame: React.FC<Props> = ({ onComplete }) => {
           <Button
             variant="ghost"
             className="flex flex-col items-center text-red-500 hover:text-red-400 hover:bg-red-500/10"
-            onClick={() => handleClick(false)}
+            onClick={() => handleAnswer(false)}
             disabled={showExplanation}
           >
             <X size={24} />
@@ -189,7 +147,7 @@ const InvestingSwipeGame: React.FC<Props> = ({ onComplete }) => {
           <Button
             variant="ghost"
             className="flex flex-col items-center text-green-500 hover:text-green-400 hover:bg-green-500/10"
-            onClick={() => handleClick(true)}
+            onClick={() => handleAnswer(true)}
             disabled={showExplanation}
           >
             <Check size={24} />

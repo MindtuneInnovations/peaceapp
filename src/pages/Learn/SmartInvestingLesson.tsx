@@ -179,7 +179,7 @@ const SmartInvestingLesson: React.FC = () => {
         )}
         
         {showingGame && !gameCompleted && (
-          <InvestingSwipeGame onComplete={handleGameComplete} />
+          <InvestingSwipeGame onComplete={handleGameComplete} level={currentLevel} />
         )}
         
         {gameCompleted && (

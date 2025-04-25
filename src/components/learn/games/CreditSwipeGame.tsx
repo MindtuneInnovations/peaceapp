@@ -1,7 +1,7 @@
 
 import React, { useState } from "react";
-import { useDraggable } from "@dnd-kit/core";
-import { motion, AnimatePresence } from "framer-motion";
+import { DndContext, DragEndEvent, useDraggable } from "@dnd-kit/core";
+import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
 import { playCorrectSound, playIncorrectSound, vibrate } from "@/utils/soundEffects";
@@ -47,26 +47,23 @@ interface CreditSwipeGameProps {
 
 const CreditSwipeGame: React.FC<CreditSwipeGameProps> = ({ onComplete }) => {
   const [currentCardIndex, setCurrentCardIndex] = useState(0);
-  const [isDragging, setIsDragging] = useState(false);
-  const [dragX, setDragX] = useState(0);
   const [showExplanation, setShowExplanation] = useState(false);
   const [isComplete, setIsComplete] = useState(false);
   const [score, setScore] = useState(0);
-
-  const { attributes, listeners, setNodeRef, transform } = useDraggable({
-    id: "card",
-  });
-
-  const handleDragEnd = () => {
-    const threshold = 100;
-    const isSwipedRight = dragX > threshold;
-    const isSwipedLeft = dragX < -threshold;
+  const [swipeDirection, setSwipeDirection] = useState<'left' | 'right' | null>(null);
+  
+  const handleDragEnd = (event: DragEndEvent) => {
+    const { delta } = event;
     
-    if (isSwipedRight || isSwipedLeft) {
+    // Check if the drag movement was significant enough to be a swipe
+    if (Math.abs(delta.x) > 100) {
+      const isSwipedRight = delta.x > 0;
       const currentCard = cards[currentCardIndex];
       const isCorrect = (isSwipedRight && currentCard.isFactual) || 
-                       (isSwipedLeft && !currentCard.isFactual);
+                       (!isSwipedRight && !currentCard.isFactual);
 
+      setSwipeDirection(isSwipedRight ? 'right' : 'left');
+      
       if (isCorrect) {
         setScore(prev => prev + 1);
         playCorrectSound();
@@ -76,12 +73,12 @@ const CreditSwipeGame: React.FC<CreditSwipeGameProps> = ({ onComplete }) => {
         playIncorrectSound();
         toast.error("Try again! 💡");
       }
-
-      setShowExplanation(true);
+      
+      setTimeout(() => {
+        setSwipeDirection(null);
+        setShowExplanation(true);
+      }, 300);
     }
-    
-    setIsDragging(false);
-    setDragX(0);
   };
 
   const handleNextCard = () => {
@@ -120,6 +117,37 @@ const CreditSwipeGame: React.FC<CreditSwipeGameProps> = ({ onComplete }) => {
   }
 
   const currentCard = cards[currentCardIndex];
+  
+  const DroppableCard = () => {
+    const { attributes, listeners, setNodeRef, transform } = useDraggable({
+      id: "card",
+    });
+
+    const style = transform ? {
+      transform: `translateX(${transform.x}px) rotate(${transform.x * 0.05}deg)`,
+      transition: transform.x ? undefined : 'transform 0.3s ease'
+    } : undefined;
+
+    return (
+      <div
+        ref={setNodeRef}
+        {...attributes}
+        {...listeners}
+        className="w-full max-w-md bg-[#1E1E2E] p-6 rounded-xl shadow-lg cursor-grab active:cursor-grabbing"
+        style={style}
+      >
+        <div className="text-center">
+          <p className="text-[#E0E0E0] text-lg font-medium">
+            {currentCard.statement}
+          </p>
+        </div>
+        <div className="mt-4 flex justify-between text-sm">
+          <div className="text-red-400">← Fiction</div>
+          <div className="text-green-400">Fact →</div>
+        </div>
+      </div>
+    );
+  };
 
   return (
     <div className="flex flex-col items-center justify-center p-4">
@@ -133,21 +161,9 @@ const CreditSwipeGame: React.FC<CreditSwipeGameProps> = ({ onComplete }) => {
       </div>
 
       {!showExplanation ? (
-        <div
-          ref={setNodeRef}
-          {...attributes}
-          {...listeners}
-          className="w-full max-w-md bg-[#1E1E2E] p-6 rounded-xl shadow-lg cursor-grab active:cursor-grabbing transition-transform"
-          style={{
-            transform: isDragging ? `translateX(${dragX}px) rotate(${dragX * 0.1}deg)` : "none",
-          }}
-        >
-          <div className="text-center">
-            <p className="text-[#E0E0E0] text-lg font-medium">
-              {currentCard.statement}
-            </p>
-          </div>
-        </div>
+        <DndContext onDragEnd={handleDragEnd}>
+          <DroppableCard />
+        </DndContext>
       ) : (
         <div className="w-full max-w-md">
           <div className="bg-[#1E1E2E] p-6 rounded-xl mb-4">

@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { ArrowLeft } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
@@ -119,7 +118,7 @@ const SmartInvestingLesson: React.FC = () => {
                 <div className="relative w-full h-full bg-black">
                   <iframe 
                     className="absolute w-full h-full" 
-                    src="https://www.youtube.com/embed/HmiCQgq3D0Y?enablejsapi=1" 
+                    src="https://www.youtube.com/embed/Epzr8azlxp8?enablejsapi=1" 
                     title="Smart Investing Tutorial"
                     frameBorder="0" 
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
@@ -138,6 +137,10 @@ const SmartInvestingLesson: React.FC = () => {
               </AspectRatio>
             </div>
             
+            <div className="text-[#999] text-xs text-center italic">
+              Video credit: Easy Peasy Finance
+            </div>
+
             <Button 
               className={`w-full bg-[#7C5CFF] ${!videoCompleted && 'opacity-70'}`}
               onClick={handleStartLessons}

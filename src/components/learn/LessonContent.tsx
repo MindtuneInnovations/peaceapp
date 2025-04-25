@@ -1,9 +1,10 @@
-
 import React, { useState } from "react";
-import { ArrowRight, Check, X } from "lucide-react";
+import { ArrowRight, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { RadioGroup } from "@/components/ui/radio-group";
 import { playCorrectSound, playIncorrectSound, vibrate } from "@/utils/soundEffects";
+import QuizOption from "./quiz/QuizOption";
+import QuizFeedback from "./quiz/QuizFeedback";
 
 interface QuizOption {
   text: string;
@@ -142,52 +143,31 @@ const LessonContent: React.FC<LessonContentProps> = ({
               disabled={showFeedback}
             >
               {currentQuestion.options.map((option, index) => (
-                <div 
+                <QuizOption
                   key={index}
-                  className={`flex items-center space-x-2 p-3 rounded-lg border border-[#444] ${
-                    selectedOption === option.text
-                      ? showFeedback
-                        ? option.isCorrect
-                          ? "bg-[#0c392d] border-[#00C48C]"
-                          : "bg-[#3a1c1c] border-[#FF5E3A]"
-                        : "bg-[#333]"
-                      : "hover:bg-[#333]"
-                  }`}
-                  onClick={() => handleOptionSelect(option.text)}
-                >
-                  <RadioGroupItem
-                    value={option.text}
-                    id={`option-${index}`}
-                    className="text-[#5DADEC]"
-                  />
-                  <label
-                    htmlFor={`option-${index}`}
-                    className="text-[#E0E0E0] text-sm font-medium flex-grow cursor-pointer"
-                  >
-                    {option.text}
-                  </label>
-                  {showFeedback && selectedOption === option.text && (
-                    option.isCorrect ? (
-                      <Check className="h-5 w-5 text-[#00C48C]" />
-                    ) : (
-                      <X className="h-5 w-5 text-[#FF5E3A]" />
-                    )
-                  )}
-                </div>
+                  text={option.text}
+                  index={index}
+                  isSelected={selectedOption === option.text}
+                  isCorrect={option.isCorrect}
+                  showFeedback={showFeedback}
+                  disabled={showFeedback}
+                  onSelect={handleOptionSelect}
+                />
               ))}
             </RadioGroup>
           </div>
 
           {showFeedback ? (
-            <div className={`mb-4 p-4 rounded-lg ${
-              isCorrect ? "bg-[#0c392d]" : "bg-[#3a1c1c]"
-            }`}>
-              <p className="text-[#E0E0E0] text-sm">
-                {isCorrect 
-                  ? "🎉 Correct! Great job understanding this concept."
-                  : "Not quite right. Let's review this concept again."}
-              </p>
-            </div>
+            <>
+              <QuizFeedback isCorrect={isCorrect} />
+              <Button 
+                className="w-full bg-[#5DADEC]" 
+                onClick={handleNextQuestion}
+              >
+                {currentQuestionIndex < quiz.length - 1 ? "Next Question" : "See Results"}
+                <ArrowRight className="ml-2 h-4 w-4" />
+              </Button>
+            </>
           ) : (
             <Button 
               className="w-full bg-[#5DADEC] mb-4"
@@ -195,16 +175,6 @@ const LessonContent: React.FC<LessonContentProps> = ({
               disabled={!selectedOption}
             >
               Submit Answer
-            </Button>
-          )}
-
-          {showFeedback && (
-            <Button 
-              className="w-full bg-[#5DADEC]" 
-              onClick={handleNextQuestion}
-            >
-              {currentQuestionIndex < quiz.length - 1 ? "Next Question" : "See Results"}
-              <ArrowRight className="ml-2 h-4 w-4" />
             </Button>
           )}
         </div>

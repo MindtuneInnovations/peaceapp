@@ -1,13 +1,11 @@
-
 import React, { useState, useEffect } from "react";
 import { ArrowLeft } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { Button } from "@/components/ui/button";
-import LessonContent from "@/components/learn/LessonContent";
-import SmartInvestingIntroLesson from "@/components/learn/lessons/SmartInvestingIntroLesson";
 import InvestingSwipeGame from "@/components/learn/games/InvestingSwipeGame";
 import { toast } from "@/hooks/use-toast";
+import { NavigationMenu, NavigationMenuContent, NavigationMenuItem, NavigationMenuList, NavigationMenuTrigger } from "@/components/ui/navigation-menu";
 
 const SmartInvestingLesson: React.FC = () => {
   const [showingVideo, setShowingVideo] = useState<boolean>(true);
@@ -16,7 +14,7 @@ const SmartInvestingLesson: React.FC = () => {
   const [gameCompleted, setGameCompleted] = useState<boolean>(false);
   const [currentLevel, setCurrentLevel] = useState<number>(1);
   const navigate = useNavigate();
-  
+
   useEffect(() => {
     // Initialize YouTube iframe API
     if (!window.YT) {
@@ -28,11 +26,26 @@ const SmartInvestingLesson: React.FC = () => {
       }
     }
   }, []);
-  
+
+  const lessons = [
+    { name: "Investment Fundamentals", level: 1 },
+    { name: "Stocks & Bonds", level: 2 },
+    { name: "Smart Investment Strategies", level: 3 },
+  ];
+
+  const handleLessonSelect = (level: number) => {
+    if (level === currentLevel) return;
+    setCurrentLevel(level);
+    setShowingVideo(true);
+    setShowingGame(false);
+    setVideoCompleted(false);
+    setGameCompleted(false);
+  };
+
   const handleVideoEnd = () => {
     setVideoCompleted(true);
   };
-  
+
   const handleStartGame = () => {
     setShowingVideo(false);
     setShowingGame(true);
@@ -58,12 +71,11 @@ const SmartInvestingLesson: React.FC = () => {
       });
     }
   };
-  
+
   const goToPractice = () => {
     navigate('/practice');
   };
 
-  // For development purposes, this will let you skip the video
   const handleSkipVideo = () => {
     setVideoCompleted(true);
   };
@@ -80,6 +92,35 @@ const SmartInvestingLesson: React.FC = () => {
       </header>
       
       <div className="p-4">
+        <NavigationMenu className="mb-6">
+          <NavigationMenuList>
+            <NavigationMenuItem>
+              <NavigationMenuTrigger 
+                className={`${currentLevel === 1 ? 'text-[#7C5CFF]' : 'text-[#E0E0E0]'}`}
+                onClick={() => handleLessonSelect(1)}
+              >
+                Level 1: Investment Fundamentals
+              </NavigationMenuTrigger>
+            </NavigationMenuItem>
+            <NavigationMenuItem>
+              <NavigationMenuTrigger 
+                className={`${currentLevel === 2 ? 'text-[#7C5CFF]' : 'text-[#E0E0E0]'}`}
+                onClick={() => handleLessonSelect(2)}
+              >
+                Level 2: Stocks & Bonds
+              </NavigationMenuTrigger>
+            </NavigationMenuItem>
+            <NavigationMenuItem>
+              <NavigationMenuTrigger 
+                className="text-[#666] cursor-not-allowed"
+                disabled
+              >
+                Level 3: Coming Soon
+              </NavigationMenuTrigger>
+            </NavigationMenuItem>
+          </NavigationMenuList>
+        </NavigationMenu>
+
         {showingVideo && (
           <div className="flex flex-col gap-6">
             <div>

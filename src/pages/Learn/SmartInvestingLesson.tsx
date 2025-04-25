@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { ArrowLeft } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
@@ -5,13 +6,15 @@ import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { Button } from "@/components/ui/button";
 import LessonContent from "@/components/learn/LessonContent";
 import SmartInvestingIntroLesson from "@/components/learn/lessons/SmartInvestingIntroLesson";
+import InvestingSwipeGame from "@/components/learn/games/InvestingSwipeGame";
 import { toast } from "@/hooks/use-toast";
 
 const SmartInvestingLesson: React.FC = () => {
   const [showingVideo, setShowingVideo] = useState<boolean>(true);
-  const [showingLesson, setShowingLesson] = useState<boolean>(false);
+  const [showingGame, setShowingGame] = useState<boolean>(false);
   const [videoCompleted, setVideoCompleted] = useState<boolean>(false);
-  const [lessonCompleted, setLessonCompleted] = useState<boolean>(false);
+  const [gameCompleted, setGameCompleted] = useState<boolean>(false);
+  const [currentLevel, setCurrentLevel] = useState<number>(1);
   const navigate = useNavigate();
   
   useEffect(() => {
@@ -30,69 +33,40 @@ const SmartInvestingLesson: React.FC = () => {
     setVideoCompleted(true);
   };
   
-  const handleStartLessons = () => {
+  const handleStartGame = () => {
     setShowingVideo(false);
-    setShowingLesson(true);
+    setShowingGame(true);
+  };
+
+  const handleGameComplete = () => {
+    if (currentLevel === 1) {
+      setCurrentLevel(2);
+      setShowingVideo(true);
+      setShowingGame(false);
+      setVideoCompleted(false);
+    } else {
+      setGameCompleted(true);
+      
+      // Award the user with $10 for completing both levels
+      const currentBalance = parseFloat(localStorage.getItem('practiceBalance') || '10000');
+      localStorage.setItem('practiceBalance', (currentBalance + 10).toString());
+      
+      toast({
+        title: "Lesson Completed! 🎉",
+        description: "You earned $10 to invest in the Practice ETF simulator",
+        duration: 5000,
+      });
+    }
+  };
+  
+  const goToPractice = () => {
+    navigate('/practice');
   };
 
   // For development purposes, this will let you skip the video
   const handleSkipVideo = () => {
     setVideoCompleted(true);
   };
-  
-  const handleLessonComplete = () => {
-    setLessonCompleted(true);
-    
-    // Award the user with $10 for completing the lesson
-    const currentBalance = parseFloat(localStorage.getItem('practiceBalance') || '10000');
-    localStorage.setItem('practiceBalance', (currentBalance + 10).toString());
-    
-    // Show reward notification
-    toast({
-      title: "Lesson Completed! 🎉",
-      description: "You earned $10 to invest in the Practice ETF simulator",
-      duration: 5000,
-    });
-    
-    // Show the reward modal
-    setShowingLesson(false);
-    setShowingVideo(false);
-  };
-  
-  const goToPractice = () => {
-    navigate('/practice');
-  };
-  
-  // This is just placeholder quiz data - you'll want to create actual quiz data
-  const investingQuiz = [
-    {
-      question: "Which investment typically has the lowest risk?",
-      options: [
-        { text: "Individual stocks", isCorrect: false },
-        { text: "Cryptocurrency", isCorrect: false },
-        { text: "Government bonds", isCorrect: true },
-        { text: "Startup investments", isCorrect: false }
-      ]
-    },
-    {
-      question: "What is dollar-cost averaging?",
-      options: [
-        { text: "Buying investments all at once", isCorrect: false },
-        { text: "Investing the same amount at regular intervals", isCorrect: true },
-        { text: "Converting foreign currency before investing", isCorrect: false },
-        { text: "Calculating your returns in dollars", isCorrect: false }
-      ]
-    },
-    {
-      question: "Which of these is considered a diversification strategy?",
-      options: [
-        { text: "Putting all money in one high-performing stock", isCorrect: false },
-        { text: "Investing only in cryptocurrency", isCorrect: false },
-        { text: "Spreading investments across different asset classes", isCorrect: true },
-        { text: "Only investing during market highs", isCorrect: false }
-      ]
-    }
-  ];
 
   return (
     <div className="min-h-screen flex flex-col bg-[#121212]">
@@ -109,8 +83,12 @@ const SmartInvestingLesson: React.FC = () => {
         {showingVideo && (
           <div className="flex flex-col gap-6">
             <div>
-              <h2 className="text-[#E0E0E0] text-xl font-bold">Investment Fundamentals</h2>
-              <p className="text-[#999] text-sm mt-1">Video introduction to smart investing</p>
+              <h2 className="text-[#E0E0E0] text-xl font-bold">
+                {currentLevel === 1 ? "Investment Fundamentals" : "Stocks & Bonds"}
+              </h2>
+              <p className="text-[#999] text-sm mt-1">
+                {currentLevel === 1 ? "Video introduction to smart investing" : "Learn about different investment types"}
+              </p>
             </div>
             
             <div className="rounded-xl overflow-hidden bg-[#1A1A1A] border border-[#333]">
@@ -118,7 +96,9 @@ const SmartInvestingLesson: React.FC = () => {
                 <div className="relative w-full h-full bg-black">
                   <iframe 
                     className="absolute w-full h-full" 
-                    src="https://www.youtube.com/embed/Epzr8azlxp8?enablejsapi=1" 
+                    src={`https://www.youtube.com/embed/${
+                      currentLevel === 1 ? 'Epzr8azlxp8' : '9T2eY4L4UDQ'
+                    }?enablejsapi=1`}
                     title="Smart Investing Tutorial"
                     frameBorder="0" 
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
@@ -143,33 +123,25 @@ const SmartInvestingLesson: React.FC = () => {
 
             <Button 
               className={`w-full bg-[#7C5CFF] ${!videoCompleted && 'opacity-70'}`}
-              onClick={handleStartLessons}
+              onClick={handleStartGame}
               disabled={!videoCompleted}
             >
-              {videoCompleted ? "Continue to Lessons" : "Watch the video to continue"}
+              {videoCompleted ? "Continue to Game" : "Watch the video to continue"}
             </Button>
             
             {!videoCompleted && (
               <p className="text-center text-[#999] text-sm">
-                Please watch the complete video to unlock lessons
+                Please watch the complete video to unlock the game
               </p>
             )}
           </div>
         )}
         
-        {showingLesson && !showingVideo && (
-          <LessonContent
-            title="Introduction to Smart Investing"
-            description="Understanding investment fundamentals" 
-            content={<SmartInvestingIntroLesson onStartQuiz={() => {}} />}
-            quiz={investingQuiz}
-            onComplete={handleLessonComplete}
-            lessonNumber={1}
-            totalLessons={4}
-          />
+        {showingGame && !gameCompleted && (
+          <InvestingSwipeGame onComplete={handleGameComplete} />
         )}
         
-        {lessonCompleted && !showingVideo && !showingLesson && (
+        {gameCompleted && (
           <div className="flex flex-col items-center justify-center gap-6 py-8">
             <div className="w-20 h-20 bg-green-500 rounded-full flex items-center justify-center">
               <svg width="40" height="40" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">

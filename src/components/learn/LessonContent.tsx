@@ -1,8 +1,8 @@
-
-import React from "react";
+import React, { useState } from "react";
 import { ArrowRight, Check, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { playCorrectSound, playIncorrectSound, vibrate } from "@/utils/soundEffects";
 
 interface QuizOption {
   text: string;
@@ -33,23 +33,38 @@ const LessonContent: React.FC<LessonContentProps> = ({
   lessonNumber,
   totalLessons
 }) => {
-  const [currentQuestionIndex, setCurrentQuestionIndex] = React.useState(0);
-  const [selectedOption, setSelectedOption] = React.useState<string | null>(null);
-  const [showFeedback, setShowFeedback] = React.useState(false);
-  const [isCorrect, setIsCorrect] = React.useState(false);
-  const [quizCompleted, setQuizCompleted] = React.useState(false);
-  const [score, setScore] = React.useState(0);
-  const [showLesson, setShowLesson] = React.useState(content !== null);
+  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+  const [selectedOption, setSelectedOption] = useState<string | null>(null);
+  const [showFeedback, setShowFeedback] = useState(false);
+  const [isCorrect, setIsCorrect] = useState(false);
+  const [quizCompleted, setQuizCompleted] = useState(false);
+  const [score, setScore] = useState(0);
+  const [showLesson, setShowLesson] = useState(content !== null);
 
   const currentQuestion = quiz[currentQuestionIndex];
 
-  const handleOptionSelect = (optionText: string, isCorrect: boolean) => {
-    setSelectedOption(optionText);
-    setIsCorrect(isCorrect);
+  const handleOptionSelect = (optionText: string) => {
+    if (!showFeedback) {
+      setSelectedOption(optionText);
+    }
+  };
+
+  const handleSubmitAnswer = () => {
+    if (!selectedOption) return;
+
+    const isAnswerCorrect = currentQuestion.options.find(
+      opt => opt.text === selectedOption
+    )?.isCorrect || false;
+
+    setIsCorrect(isAnswerCorrect);
     setShowFeedback(true);
-    
-    if (isCorrect) {
+
+    if (isAnswerCorrect) {
       setScore(prevScore => prevScore + 1);
+      playCorrectSound();
+      vibrate();
+    } else {
+      playIncorrectSound();
     }
   };
 
@@ -87,7 +102,7 @@ const LessonContent: React.FC<LessonContentProps> = ({
           </div>
           
           <Button 
-            className="w-full mt-4 bg-[#5DADEC]"
+            className="w-full bg-[#5DADEC]"
             onClick={startQuiz}
           >
             Start Quiz
@@ -99,18 +114,10 @@ const LessonContent: React.FC<LessonContentProps> = ({
           <div className="w-16 h-16 bg-[#5DADEC] rounded-full flex items-center justify-center mx-auto mb-4">
             <Check className="text-white h-8 w-8" />
           </div>
-          <h3 className="text-[#E0E0E0] text-xl font-bold">Lesson Complete!</h3>
+          <h3 className="text-[#E0E0E0] text-xl font-bold">Quiz Complete!</h3>
           <p className="text-[#999] text-base mt-2">
             You scored {score}/{quiz.length} on the quiz
           </p>
-          
-          {score === quiz.length && (
-            <div className="mt-4 bg-[#232323] p-3 rounded-xl">
-              <p className="text-[#E0E0E0] text-sm">
-                Great job! Keep going to earn your Credit Card Beginner badge.
-              </p>
-            </div>
-          )}
           
           <Button 
             className="w-full mt-6 bg-[#5DADEC]"
@@ -138,12 +145,14 @@ const LessonContent: React.FC<LessonContentProps> = ({
                   key={index}
                   className={`flex items-center space-x-2 p-3 rounded-lg border border-[#444] ${
                     selectedOption === option.text
-                      ? option.isCorrect
-                        ? "bg-[#0c392d] border-[#00C48C]"
-                        : "bg-[#3a1c1c] border-[#FF5E3A]"
+                      ? showFeedback
+                        ? option.isCorrect
+                          ? "bg-[#0c392d] border-[#00C48C]"
+                          : "bg-[#3a1c1c] border-[#FF5E3A]"
+                        : "bg-[#333]"
                       : "hover:bg-[#333]"
                   }`}
-                  onClick={() => !showFeedback && handleOptionSelect(option.text, option.isCorrect)}
+                  onClick={() => handleOptionSelect(option.text)}
                 >
                   <RadioGroupItem
                     value={option.text}
@@ -168,7 +177,7 @@ const LessonContent: React.FC<LessonContentProps> = ({
             </RadioGroup>
           </div>
 
-          {showFeedback && (
+          {showFeedback ? (
             <div className={`mb-4 p-4 rounded-lg ${
               isCorrect ? "bg-[#0c392d]" : "bg-[#3a1c1c]"
             }`}>
@@ -178,6 +187,14 @@ const LessonContent: React.FC<LessonContentProps> = ({
                   : "Not quite right. Let's review this concept again."}
               </p>
             </div>
+          ) : (
+            <Button 
+              className="w-full bg-[#5DADEC] mb-4"
+              onClick={handleSubmitAnswer}
+              disabled={!selectedOption}
+            >
+              Submit Answer
+            </Button>
           )}
 
           {showFeedback && (
